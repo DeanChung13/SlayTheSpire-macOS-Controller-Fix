@@ -86,8 +86,15 @@ public class CInputHelper {
                     model = ControllerModel.XBOX_ONE;
                     ImageMaster.loadControllerImages((ControllerModel)ControllerModel.XBOX_ONE);
                 } else {
-                    model = ControllerModel.XBOX_360;
-                    ImageMaster.loadControllerImages((ControllerModel)ControllerModel.XBOX_360);
+                    String name = controller.getName().toLowerCase();
+                    if (name.contains("dualsense") || name.contains("wireless controller") || name.contains("sony") || name.contains("ps5") || name.contains("ps4") || name.contains("playstation")) {
+                        model = ControllerModel.PS4;
+                        ImageMaster.loadControllerImages(ControllerModel.PS4);
+                        logger.info("[CONTROLLER] Detected PlayStation / DualSense controller: " + controller.getName() + " -> Loaded PS4 icons!");
+                    } else {
+                        model = ControllerModel.XBOX_360;
+                        ImageMaster.loadControllerImages((ControllerModel)ControllerModel.XBOX_360);
+                    }
                 }
             } else {
                 logger.info("[CONTROLLER] No controllers detected");
@@ -101,6 +108,17 @@ public class CInputHelper {
         controller = controllerToUse;
         controller.addListener((ControllerListener)listener);
         Controllers.removeListener((ControllerListener)listener);
+        String name = controller.getName().toLowerCase();
+        if (name.contains("dualsense") || name.contains("wireless controller") || name.contains("sony") || name.contains("ps5") || name.contains("ps4") || name.contains("playstation")) {
+            model = ControllerModel.PS4;
+            ImageMaster.loadControllerImages(ControllerModel.PS4);
+        } else if (controller.getName().contains("Xbox One")) {
+            model = ControllerModel.XBOX_ONE;
+            ImageMaster.loadControllerImages(ControllerModel.XBOX_ONE);
+        } else {
+            model = ControllerModel.XBOX_360;
+            ImageMaster.loadControllerImages(ControllerModel.XBOX_360);
+        }
     }
 
     public static void setCursor(Hitbox hb) {

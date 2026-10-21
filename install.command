@@ -117,17 +117,10 @@ fi
 echo "⚡ 正在注入手把與十字鍵修復補丁 (Injecting fix patch)..."
 
 cd "$SCRIPT_DIR/patch/classes"
-zip -u "$JAR_PATH" \
-    com/megacrit/cardcrawl/helpers/input/InputHelper.class \
-    com/megacrit/cardcrawl/helpers/controller/CInputHelper\$ControllerModel.class \
-    com/megacrit/cardcrawl/helpers/controller/CInputHelper.class \
-    com/megacrit/cardcrawl/helpers/controller/CInputListener.class \
-    com/megacrit/cardcrawl/helpers/controller/MacInputWrapper.class \
-    com/badlogic/gdx/controllers/desktop/ois/OisJoystick\$OisPov.class \
-    com/badlogic/gdx/controllers/desktop/ois/OisJoystick.class > /dev/null
+zip -r "$JAR_PATH" com > /dev/null
 
 cd "$SCRIPT_DIR/patch/native"
-zip -u "$JAR_PATH" libgdx-controllers-desktop64.dylib > /dev/null
+zip "$JAR_PATH" libgdx-controllers-desktop64.dylib > /dev/null
 
 # 5. Clear libgdx cache in /var/folders & /tmp
 echo "🧹 清理暫存快取 (Clearing stale libgdx cache)..."
