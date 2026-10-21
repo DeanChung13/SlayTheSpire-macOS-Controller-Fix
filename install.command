@@ -120,7 +120,7 @@ cd "$SCRIPT_DIR/patch/classes"
 zip -r "$JAR_PATH" com > /dev/null
 
 cd "$SCRIPT_DIR/patch/native"
-zip "$JAR_PATH" libgdx-controllers-desktop64.dylib > /dev/null
+zip "$JAR_PATH" libgdx-controllers-desktop64.dylib libdualsense-bt64.dylib > /dev/null
 
 # 5. Clear libgdx cache in /var/folders & /tmp
 echo "🧹 清理暫存快取 (Clearing stale libgdx cache)..."

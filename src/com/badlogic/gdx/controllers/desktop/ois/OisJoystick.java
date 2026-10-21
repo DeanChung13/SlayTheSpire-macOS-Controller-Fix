@@ -4,6 +4,7 @@
 package com.badlogic.gdx.controllers.desktop.ois;
 
 import com.badlogic.gdx.controllers.desktop.ois.OisListener;
+import com.badlogic.gdx.controllers.desktop.ois.BluetoothDualSense;
 
 public class OisJoystick {
     private static final int MIN_AXIS = Short.MIN_VALUE;
@@ -26,21 +27,28 @@ public class OisJoystick {
         this.povs = new int[this.getPovCount()];
         this.slidersX = new boolean[this.getSliderCount()];
         this.slidersY = new boolean[this.getSliderCount()];
+        if (name != null && (name.contains("DualSense") || name.contains("Wireless Controller"))) {
+            BluetoothDualSense.init();
+        }
     }
 
     public void setListener(OisListener listener) {
         this.listener = listener;
     }
 
-    private void buttonPressed(int buttonIndex) {
-        this.buttons[buttonIndex] = true;
+    void buttonPressed(int buttonIndex) {
+        if (buttonIndex >= 0 && buttonIndex < this.buttons.length) {
+            this.buttons[buttonIndex] = true;
+        }
         if (this.listener != null) {
             this.listener.buttonPressed(this, buttonIndex);
         }
     }
 
-    private void buttonReleased(int buttonIndex) {
-        this.buttons[buttonIndex] = false;
+    void buttonReleased(int buttonIndex) {
+        if (buttonIndex >= 0 && buttonIndex < this.buttons.length) {
+            this.buttons[buttonIndex] = false;
+        }
         if (this.listener != null) {
             this.listener.buttonReleased(this, buttonIndex);
         }
@@ -50,6 +58,15 @@ public class OisJoystick {
         this.axes[axisIndex] = (float)(value - Short.MIN_VALUE << 1) / 65535.0f - 1.0f;
         if (this.listener != null) {
             this.listener.axisMoved(this, axisIndex, this.axes[axisIndex]);
+        }
+    }
+
+    void axisMovedDirect(int axisIndex, float val) {
+        if (axisIndex >= 0 && axisIndex < this.axes.length) {
+            this.axes[axisIndex] = val;
+        }
+        if (this.listener != null) {
+            this.listener.axisMoved(this, axisIndex, val);
         }
     }
 
@@ -77,6 +94,9 @@ public class OisJoystick {
 
     public void update() {
         this.update(this.joystickPtr, this);
+        if (BluetoothDualSense.isActive()) {
+            BluetoothDualSense.poll(this);
+        }
     }
 
     public int getAxisCount() {
@@ -213,6 +233,5 @@ public class OisJoystick {
         SouthEast,
         NorthWest,
         SouthWest;
-
     }
 }
